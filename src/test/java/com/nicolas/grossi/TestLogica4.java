@@ -90,6 +90,17 @@ public class TestLogica4 {
   }
   @Test
   @Order(6)
+  public void aumentarZ() {
+    String input = "99ZZ";
+    String expected = "00AA";
+    CharCollapsoDTO c = Main.aumentar_devuelve_si_collapsa(input);
+
+    String result = c.getRta();
+
+    assertEquals(expected,result);
+  }
+  @Test
+  @Order(6)
   public void esTodosZ() {
     String input = "Z";
     boolean expected = true;

@@ -13,7 +13,7 @@ public class Main {
   }
   public static String generatePlate(String input) {
     String rta = "";
-    int largoInput = input.length();
+    int inputLarge = input.length();
 
     if (isNumeric(input)) {
       CharCollapsoDTO result = aumentar_devuelve_si_collapsa(input);
@@ -25,19 +25,18 @@ public class Main {
         }
       }
     } else {
-      CharCollapsoDTO partido_a_la_mitad_si_contiene_chars = partir_mitad_devuelve_si_collapsa(input);
+      CharCollapsoDTO partido_a_la_mitad_si_contiene_chars = splitHalf(input);
 
       rta = partido_a_la_mitad_si_contiene_chars.getRta();
     }
 
-//    int aux = stringToInt(rta);
     String rtaAutocomplete = autoCompletarZeros(rta,input.length());
 
     return rtaAutocomplete;
   }
 
 
-  public static CharCollapsoDTO partir_mitad_devuelve_si_collapsa(String input) {
+  public static CharCollapsoDTO splitHalf(String input) {
     CharCollapsoDTO result = new CharCollapsoDTO();
     String rta = "";
     boolean colapsa = false;
@@ -66,7 +65,13 @@ public class Main {
           {
             primeraParte = autoCompletarZeros("0", primeraParte.length());
           }
-          rta = primeraParte + "" + primeraLetra + "" + resAumentarSegundaParte.getRta();
+          String segundaParteRTA =  resAumentarSegundaParte.getRta();
+
+          if(resAumentarSegundaParte.rta.equalsIgnoreCase("A")&& primeraLetra.equalsIgnoreCase("Z"))
+          {
+            primeraLetra = arrGlobal.get(0);
+          }
+          rta = primeraParte + "" + primeraLetra + "" +segundaParteRTA;
         }
       }
     } else if (primeraParte.length() > 0) {
@@ -83,9 +88,20 @@ public class Main {
       }
     }
     else {
-      rta= arrGlobal.get(posPrimeraLetraGlobal+1);
-      colapsa = false;
-      System.out.println("??  creo que tengo que aumentar la letra y fue..");
+      System.out.println("INPUT:" + input);
+//      rta =
+      int maxGlobalArrSize = arrGlobal.size();
+      if(posPrimeraLetraGlobal < (maxGlobalArrSize-1))
+      {
+        rta= arrGlobal.get(posPrimeraLetraGlobal+1);
+        colapsa = false;
+      }
+      else
+      {
+        rta = arrGlobal.get(0);
+        colapsa = true;
+      }
+
     }
 
 
@@ -117,8 +133,13 @@ public class Main {
       else
       {
         // LO QUE QUEDA HAY LETRAS Y NUMEROS:
-        CharCollapsoDTO c = partir_mitad_devuelve_si_collapsa(input);
+        CharCollapsoDTO c = splitHalf(input);
         rta = c.getRta();
+        if(esTodosZs(rta))
+        {
+          rta =reemplazarZPorA(rta);
+//          collapsa = true;
+        }
       }
     }
       result.setRta(rta);
